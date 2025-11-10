@@ -1,0 +1,28 @@
+aws --version
+kubectl version --client
+
+aws eks update-kubeconfig --region ap-south-1 --name ncl-cluster
+
+(This command does three things:Fetches cluster details (API endpoint & certificate 2-Merges them into your local ~/.kube/config and 3-Sets your current context to the EKS cluster)
+
+Verify the connection- kubectl get nodes
+-(Optional): Check current context You can confirm your active cluster: kubectl config current-context
+
+ kubectl config use-context docker-desktop
+kubectl delete all,cm,secret,pvc,pv,ingress --all
+
+
+kubectl apply -f nginx-deployment.yaml
+kubectl port-forward svc/nginx-service 8080:80
+
+http://localhost:8080
+
+# 1️⃣ Apply the YAML file
+kubectl apply -f nginx-eks-deployment.yaml
+
+# 2️⃣ Check that pods are running
+kubectl get pods
+
+# 3️⃣ Verify the service and get the LoadBalancer URL
+kubectl get svc nginx-service
+
