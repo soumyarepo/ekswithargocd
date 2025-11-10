@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>3D Amazon EKS Architecture - Made by Soumya Ranjan</title>
+  <style>
+    body{font-family:Inter, system-ui, Arial, sans-serif; background: linear-gradient(#f6fbff,#ffffff); padding:24px;}
+    .canvas{width:100%;max-width:1400px;margin:0 auto;box-shadow:0 10px 30px rgba(20,40,80,0.08);border-radius:12px;padding:18px;background:white}
+    svg{width:100%;height:auto}
+    .label{font-size:13px;fill:#0f172a;font-weight:600}
+    .sub{font-size:11px;fill:#475569;font-weight:500}
+    .note{font-size:12px;fill:#334155}
+    .madeby{font-size:14px;fill:#0f172a;font-weight:600}
+  </style>
+</head>
+<body>
+  <div class="canvas">
+    <!-- Isometric-style SVG diagram -->
+    <svg viewBox="0 0 2048 1536" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="3D Amazon EKS architecture diagram">
+      <!-- Drop shadow defs -->
+      <defs>
+        <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+          <feDropShadow dx="0" dy="30" stdDeviation="40" flood-color="#0b1220" flood-opacity="0.08"/>
+        </filter>
+        <linearGradient id="vpcGrad" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stop-color="#e6f0ff"/>
+          <stop offset="100%" stop-color="#ffffff"/>
+        </linearGradient>
+        <linearGradient id="boxGrad" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stop-color="#f8fafc"/>
+          <stop offset="100%" stop-color="#eef2ff"/>
+        </linearGradient>
+      </defs>
+
+      <!-- VPC (big rounded isometric-like box) -->
+      <g transform="translate(160,120)">
+        <rect x="0" y="0" rx="28" ry="28" width="1728" height="1140" fill="url(#vpcGrad)" stroke="#c7d8ff" stroke-width="2" filter="url(#softShadow)"/>
+        <text x="24" y="40" class="label">VPC (10.0.0.0/16)</text>
+      </g>
+
+      <!-- Public Subnets box -->
+      <g transform="translate(220,220)">
+        <rect x="0" y="0" rx="18" ry="18" width="720" height="220" fill="url(#boxGrad)" stroke="#cbd5e1" stroke-width="1.5"/>
+        <text x="18" y="28" class="label">Public Subnets</text>
+        <text x="18" y="52" class="sub">AZ-a  •  AZ-b</text>
+        <!-- Load balancer icon -->
+        <g transform="translate(520,48)">
+          <rect x="0" y="0" width="160" height="64" rx="10" fill="#e6f0ff" stroke="#9fb8ff"/>
+          <text x="14" y="38" class="sub">NLB / ALB</text>
+        </g>
+        <!-- NAT gateway -->
+        <g transform="translate(380,50)">
+          <rect x="0" y="0" width="110" height="44" rx="8" fill="#fff3e8" stroke="#ffd6a5"/>
+          <text x="12" y="30" class="sub">NAT Gateway</text>
+        </g>
+      </g>
+
+      <!-- Private Subnets box -->
+      <g transform="translate(220,460)">
+        <rect x="0" y="0" rx="18" ry="18" width="1220" height="520" fill="url(#boxGrad)" stroke="#cbd5e1" stroke-width="1.5"/>
+        <text x="18" y="28" class="label">Private Subnets</text>
+        <text x="18" y="52" class="sub">AZ-a  •  AZ-b</text>
+
+        <!-- Worker nodes - three boxes -->
+        <g transform="translate(60,96)">
+          <g>
+            <rect x="0" y="0" width="240" height="120" rx="12" fill="#fff" stroke="#cbd5e1"/>
+            <text x="18" y="36" class="label">Worker Node</text>
+            <text x="18" y="64" class="sub">EC2 (Auto Scaling Group)</text>
+            <rect x="18" y="76" width="180" height="8" rx="4" fill="#e6f0ff"/>
+          </g>
+          <g transform="translate(320,0)">
+            <rect x="0" y="0" width="240" height="120" rx="12" fill="#fff" stroke="#cbd5e1"/>
+            <text x="18" y="36" class="label">Worker Node</text>
+            <text x="18" y="64" class="sub">EC2 (Auto Scaling Group)</text>
+            <rect x="18" y="76" width="180" height="8" rx="4" fill="#e6f0ff"/>
+          </g>
+          <g transform="translate(640,0)">
+            <rect x="0" y="0" width="240" height="120" rx="12" fill="#fff" stroke="#cbd5e1"/>
+            <text x="18" y="36" class="label">Worker Node</text>
+            <text x="18" y="64" class="sub">EC2 (Auto Scaling Group)</text>
+            <rect x="18" y="76" width="180" height="8" rx="4" fill="#e6f0ff"/>
+          </g>
+        </g>
+
+        <!-- Security group shields near nodes -->
+        <g transform="translate(58,230)">
+          <g>
+            <circle cx="30" cy="18" r="18" fill="#eef2ff" stroke="#c7d8ff"/>
+            <text x="60" y="26" class="sub">SG: worker-nodes</text>
+          </g>
+        </g>
+      </g>
+
+      <!-- Control plane (managed) - positioned top-right, dashed connection to VPC to indicate AWS-managed -->
+      <g transform="translate(1160,160)">
+        <rect x="0" y="0" rx="16" ry="16" width="520" height="260" fill="#ffffff" stroke="#e2e8f0" stroke-dasharray="6,6"/>
+        <text x="18" y="36" class="label">Amazon EKS Control Plane (managed)</text>
+        <text x="18" y="62" class="sub">API Server  •  etcd (managed)</text>
+        <g transform="translate(18,96)">
+          <rect x="0" y="0" width="200" height="56" rx="8" fill="#f1f5f9" stroke="#cbd5e1"/>
+          <text x="14" y="36" class="sub">API Server</text>
+        </g>
+        <g transform="translate(240,96)">
+          <rect x="0" y="0" width="240" height="56" rx="8" fill="#f1f5f9" stroke="#cbd5e1"/>
+          <text x="14" y="36" class="sub">etcd (Managed)</text>
+        </g>
+        <!-- small note -->
+        <text x="18" y="170" class="note">AWS-managed control plane (not in customer VPC)</text>
+        <!-- arrow pointing slightly outside VPC -->
+        <line x1="-40" y1="220" x2="-160" y2="280" stroke="#9aaedb" stroke-width="2" stroke-dasharray="4,6"/>
+      </g>
+
+      <!-- eksctl (CLI) left side terminal -->
+      <g transform="translate(40,360)">
+        <rect x="0" y="0" width="220" height="120" rx="14" fill="#0f172a"/>
+        <text x="18" y="36" fill="#fff" font-size="16" font-weight="700">eksctl</text>
+        <text x="18" y="64" fill="#cbd5e1" font-size="12">creates cluster & nodegroups</text>
+        <!-- arrows from eksctl to IAM and Control plane -->
+      </g>
+
+      <!-- IAM panel outside VPC on the right -->
+      <g transform="translate(1360,720)">
+        <rect x="0" y="0" width="360" height="200" rx="12" fill="#fff7f0" stroke="#ffd6a5"/>
+        <text x="18" y="36" class="label">IAM Roles & Policies</text>
+        <text x="18" y="64" class="sub">• Cluster Role</text>
+        <text x="18" y="88" class="sub">• Node Instance Role</text>
+        <text x="18" y="112" class="sub">• IRSA - IAM role for ServiceAccounts</text>
+        <g transform="translate(18,126)">
+          <rect x="0" y="0" width="140" height="10" rx="4" fill="#ffe8d6"/>
+        </g>
+      </g>
+
+      <!-- Connections: eksctl -> IAM and Control Plane -->
+      <g>
+        <path d="M 260 420 C 420 360, 800 240, 1160 200" fill="none" stroke="#6b7280" stroke-width="2" stroke-dasharray="6,4"/>
+        <text x="720" y="300" class="sub">creates cluster & nodegroups</text>
+
+        <path d="M 260 420 C 520 560, 1200 760, 1460 820" fill="none" stroke="#9aaedb" stroke-width="2" stroke-dasharray="4,6"/>
+        <text x="880" y="620" class="sub">creates roles & policies</text>
+
+        <!-- IAM to Control Plane (dashed) -->
+        <path d="M 1720 840 C 1560 660, 1400 520, 1400 320" fill="none" stroke="#0ea5a4" stroke-width="2" stroke-dasharray="6,6"/>
+        <text x="1520" y="620" class="sub">IAM permissions</text>
+
+        <!-- LB to Worker nodes -->
+        <path d="M 760 320 C 800 420, 860 520, 900 560" fill="none" stroke="#475569" stroke-width="2"/>
+        <text x="820" y="420" class="sub">traffic</text>
+
+        <!-- kubectl laptop to API server -->
+        <path d="M 80 140 C 260 80, 760 40, 1160 200" fill="none" stroke="#111827" stroke-width="2"/>
+        <text x="500" y="120" class="sub">kubectl / AWS CLI → API Server (443)</text>
+      </g>
+
+      <!-- Legend -->
+      <g transform="translate(220,1010)">
+        <rect x="0" y="0" width="520" height="100" rx="10" fill="#ffffff" stroke="#e6eefc"/>
+        <text x="18" y="28" class="label">Legend</text>
+        <text x="18" y="56" class="sub">■ Control Plane  ■ Worker Nodes  ■ Load Balancer  ■ IAM  ■ eksctl</text>
+      </g>
+
+      <!-- Bottom 'Made by' text -->
+      <g transform="translate(0,1420)">
+        <text x="1024" y="40" text-anchor="middle" class="madeby">Made by Soumya Ranjan</text>
+      </g>
+
+    </svg>
+  </div>
+</body>
+</html>
